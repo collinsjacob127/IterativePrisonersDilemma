@@ -29,7 +29,7 @@ def readEdgeList(filename):
   return G
 
 if __name__=='__main__':
-  G = readEdgeList('router_INET/router_INET.txt')
+  G = nx.gnp_random_graph(1000, 0.1)
   n = G.number_of_nodes()
   p = 0.1 #make sure that p is above the connectivity threshold
   repeats = 1000
