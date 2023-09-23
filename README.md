@@ -1,3 +1,4 @@
+[![Python application](https://github.com/collinsjacob127/IterativePrisonersDilemma/actions/workflows/python-app.yml/badge.svg)](https://github.com/collinsjacob127/IterativePrisonersDilemma/actions/workflows/python-app.yml)
 # IterativePrisonersDilemma
 
 ## Authors
