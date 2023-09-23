@@ -31,6 +31,15 @@ git add -A
 git commit -m "Added foo"
 git push -u origin example_branch_name
 ```
+Pull updates from main to your branch:
+```
+git pull origin main
+```
+(Sometimes ```git pull origin main --rebase``` can be helpful if there are conflicts)
+
+Pull requests (from your branch to main) are made in the GitHub UI.
+
+[This guide](https://www.digitalocean.com/community/tutorials/how-to-create-a-pull-request-on-github) describes some more in-depth features for working with remote repositories.
 
 ### Setting Up Python Venv (Linux/WSL)
 
