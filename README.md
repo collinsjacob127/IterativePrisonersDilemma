@@ -13,7 +13,7 @@ Simulate the [prisoner's dilemma](https://en.wikipedia.org/wiki/Prisoner's_dilem
 
 ## Instructions
 
-### Using GitHub (Linux/WSL)
+### Clone Repo + Making Changes (Linux/WSL)
 [Instructions](https://learn.microsoft.com/en-us/windows/wsl/install) for setting up WSL, if needed.
 
 Download the repo:
@@ -54,9 +54,9 @@ Deactivating a venv:
 deactivate
 ```
 
-Installing packages:
+Installing required packages:
 ```
 python3 -m ensurepip --upgrade
-pip install -r requirements.txt
+pip install -r requirements.txt -U
 ```
 
