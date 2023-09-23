@@ -34,3 +34,4 @@ if __name__=='__main__':
   p = 0.1 #make sure that p is above the connectivity threshold
   repeats = 1000
   testGlobalCluster(n, p, repeats=repeats)
+ 
