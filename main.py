@@ -1,4 +1,15 @@
-#Python code investigating the global clustering coefficient of Erdos-REnyi random graphs
+'''
+Authors:
+* Lucas Butler
+* Jacob Collins
+* Spencer Pollard
+* Suneetha Tadi
+Description:
+Simulate the Prisoner's Dilemma on randomly generated
+networks across many time steps.
+Sources:
+
+'''
 
 import networkx as nx
 import matplotlib
