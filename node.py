@@ -4,12 +4,14 @@
 class Node():
 
     score = None
+    id = None
     coop_prob = float()
 
-    def __init__(self, score, coop_prob):
+    def __init__(self, id, score, coop_prob):
+        self.id=id
         self.score=score
         self.coop_prob=coop_prob
 
     def __repr__(self):
-        print(f"({self.score}, {self.coop_prob})")()
+        return f"({self.score}, {self.coop_prob})"
     
