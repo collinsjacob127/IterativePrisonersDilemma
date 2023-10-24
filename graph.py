@@ -1,7 +1,7 @@
 # Jacob Collins
 
 from node import Node
-from networkx import set_node_attributes, neighbors
+from networkx import set_node_attributes, neighbors, get_node_attributes
 from numpy.random import choice
 #import networkx as nx
 
@@ -12,11 +12,12 @@ from numpy.random import choice
 # @param coop_vals: list of possible starting coop_probs for prisoners
 # @param coop_odds: probability of a node having the coop_prob assosciated with
 #                   the corresponding index in coop_vals
-def addAgentsToGraph(
+def add_rand_agents(
     G, 
     init_score=0, 
     coop_vals=[1, 0], 
-    coop_odds=[0.5, 0.5]):
+    coop_odds=[0.5, 0.5],
+    tag='agent'):
     attrs = {
         u: Node(
             score=init_score, 
@@ -27,10 +28,23 @@ def addAgentsToGraph(
             ) 
         for u in G.nodes()
     }
-    set_node_attributes(G, attrs, 'agent')
+    set_node_attributes(G, attrs, tag)
     return G
+
+def get_agent(G, u, tag='agent'):
+    return G.nodes[u][tag]
     
-def updateScores(G):
-    for u in G.nodes():
-        for v in neighbors(G, u):
-            G.nodes[u]['agent'].updateScore(G.nodes[v]['agent'])
+def update_scores(
+    G, 
+    n_bunch=None, 
+    agent_tag='agent', 
+    score_tag='score'):
+    S = G.subgraph(n_bunch).copy()
+    for u in S.nodes():
+        for v in neighbors(S, u):
+            S.nodes[u]['agent'].update_score(S.nodes[v][agent_tag])
+    scores = {u: get_agent(G, u).get_score() for u in S}
+    set_node_attributes(G, scores, score_tag)
+
+
+
