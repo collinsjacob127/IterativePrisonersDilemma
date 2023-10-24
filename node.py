@@ -26,6 +26,9 @@ class Node():
     def get_score(self):
         return self.score
     
+    def get_coop_prob(self):
+        return self.coop_prob
+    
     # 1 = cooperate
     # 0 = defect
     def strategy(self):
@@ -48,5 +51,6 @@ class Node():
         # Both were evil
         if not (self_choice and opponent_choice):
             self.score += self.punishment
+        return self_choice
         
         
