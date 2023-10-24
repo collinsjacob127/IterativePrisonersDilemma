@@ -32,6 +32,7 @@ def addAgentsToGraph(
     set_node_attributes(G, attrs, tag)
     return G
     
+
 def updateScores(G, tag='agent'):
     for u in G.nodes():
         for v in neighbors(G, u):
