@@ -6,7 +6,7 @@ from numpy.random import choice
 #import networkx as nx
 
 
-# Class for generating a network of agents using config model
+# Function for generating a network of agents using config model
 # @param deg_seq: 1d list of the degree for node u in range(len(deg_seq))
 # @param init_score: the score to set the initial value of prisoners to
 # @param coop_vals: list of possible starting coop_probs for prisoners
