@@ -32,7 +32,7 @@ class Node():
     # 1 = cooperate
     # 0 = defect
     def strategy(self):
-        return int(rand() < self.coop_prob)
+        return bool(rand() < self.coop_prob)
 
     # u is an instance of another node
     # Compare their strategies and update score accordingly
