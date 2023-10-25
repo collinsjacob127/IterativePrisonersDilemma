@@ -7,12 +7,17 @@ from collections.abc import Iterable
 #import networkx as nx
 
 
-# Function for generating a network of agents using config model
-# @param deg_seq: 1d list of the degree for node u in range(len(deg_seq))
+# Function for generating a network of agents
+# @param G: A graph to add agents to the nodes of
 # @param init_score: the score to set the initial value of prisoners to
 # @param coop_vals: list of possible starting coop_probs for prisoners
 # @param coop_odds: probability of a node having the coop_prob assosciated with
 #                   the corresponding index in coop_vals
+
+
+# Agents are initialized with randomized scores and coop probs based on 
+#   our defined probability distribution and matching coop_prob list
+# @return G: The input graph, with agents in G.node[u][tag]
 def add_rand_agents(
     G, 
     init_score=0, 
@@ -31,7 +36,9 @@ def add_rand_agents(
     set_node_attributes(G, attrs, tag)
     return G
 
-
+  
+# Agents are initialized with individual predefined scores and coop_probs
+# @return G: The input graph, with agents in G.node[u][tag]
 def add_agents(
     G, 
     score_vals,
@@ -56,6 +63,7 @@ def add_agents(
 def get_agent(G, u, tag='agent'):
     return G.nodes[u][tag]
     
+    
 def update_scores(
     G, 
     n_bunch=None, 
@@ -78,6 +86,4 @@ def verify_agents(G):
     
 def run_time_steps(G, n):
     return
-    
-
 
