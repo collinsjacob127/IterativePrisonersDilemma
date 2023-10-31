@@ -1,6 +1,11 @@
 [![Python application](https://github.com/collinsjacob127/IterativePrisonersDilemma/actions/workflows/python-app.yml/badge.svg)](https://github.com/collinsjacob127/IterativePrisonersDilemma/actions/workflows/python-app.yml)
 # IterativePrisonersDilemma
 
+<!-- ![](https://github.com/collinsjacob127/IterativePrisonersDilemma/blob/main/graphs/complete/test1/varying_prisoner_strat.gif) -->
+<p align="center">
+<img src="https://github.com/collinsjacob127/IterativePrisonersDilemma/blob/main/graphs/complete/test1/varying_prisoner_strat.gif" border="10"/>
+</p>
+
 ## Authors
 
 * Lucas Butler
