@@ -21,15 +21,8 @@ def save_gexf(G, filename, dirname):
 #                 Given in the form 'dir1/dir2' or 'dirname'
 #                 (No trailing forward-slash) (Optional)
 # @param pos: The networkx positional layout for the graph (Optional)
-def draw_graph(G, filename, dirname=None, title=None, pos=None):
+def draw_graph(G, filename, dirname=None, title=None):
     kill_score_cap=200
-    # try:
-    #     G.nodes[0]['pos'] != None
-    # except:
-    #     # Positions have not been set
-    #     print("Positions were not set")
-    #     pos = shell_layout(G)
-    #     set_node_positions(G, pos)
     # Add edges to plot
     edge_x = []
     edge_y = []
@@ -71,21 +64,24 @@ def draw_graph(G, filename, dirname=None, title=None, pos=None):
             color=[],
             size=10,
             colorbar=dict(
+                tick0=0,
+                dtick=20,
                 thickness=15,
                 tickfont=dict(
                         family="Courier New, monospace",
-                        size=10,
+                        size=14,
                         color="LightGray"
                         ),
                 title={
                     'text': 'Years Imprisoned',
                     'font': dict(
                         family="Courier New, monospace",
-                        size=12,
+                        size=20,
                         color="LightGray"
                     )},
                 xanchor='left',
                 titleside='right',
+                x=1
             ),
             line_width=2))
     # Color Node Points
@@ -119,7 +115,7 @@ def draw_graph(G, filename, dirname=None, title=None, pos=None):
             'text': "Simulating the Prisoner's Dilemma",
             'font': dict(
                 family="Courier New, monospace",
-                size=18,
+                size=30,
                 color="White"
             ),
             'y': 0.97,
@@ -128,7 +124,7 @@ def draw_graph(G, filename, dirname=None, title=None, pos=None):
             'yanchor': 'top' })
     dir_path = f'graphs/{dirname}/'
     makedirs(dir_path, exist_ok=True)
-    fig.write_image(f'{dir_path}{filename}.png', format='png')
+    fig.write_image(f'{dir_path}{filename}.png', format='png', width=1024, height=768)
 
 
 def sort_by_prefix(filenames, prefix_list):

@@ -11,12 +11,16 @@ Sources:
 '''
 
 import networkx as nx
+from numpy import floor
 from graph import *
 from save import *
 
 def example():
-    G1 = nx.complete_graph(6)
-    add_agents(G1, 0, [1,1,1,0,0,0])
+    n = 6
+    G1 = nx.complete_graph(n)
+    coop_prop = 0.9
+    n_coop = int(floor(n*coop_prop))
+    add_agents(G1, 0, [0.8]*n_coop + [0.2]*(n-n_coop))
     print("Constant Strategies (Default)")
     for u in G1.nodes():
         print(f'{u}: {get_agent(G1, u)}')
@@ -30,7 +34,7 @@ def example():
     print("")
     
     print("Probabilistic Strategies")
-    G2 = nx.complete_graph(5)
+    G2 = nx.complete_graph(n)
     add_rand_agents(G2, 0, [0.8, 0.2], [0.5, 0.5])
     for u in G2.nodes():
         print(f'{u}: {get_agent(G2, u)}')
@@ -46,8 +50,13 @@ def example():
 # 90% of prisoners have an 80% chance to cooperate
 # 10% of prisoners have a 20% chance to cooperate
 def generate_gif():
-    G = nx.gnp_random_graph(100, 0.05, seed=1)
-    add_rand_agents(G, 0.0, [0.8, 0.2], [0.9, 0.1])
+    n = 100
+    G = nx.gnp_random_graph(n, 5/(n+5), seed=1)
+    # add_rand_agents(G, 0.0, [0.8, 0.2], [0.9, 0.1])
+    coop_prop = 0.9
+    n_coop = int(floor(n*coop_prop))
+    add_agents(G, 0, [0.8]*n_coop + [0.2]*(n-n_coop))
+
     # pos = nx.spectral_layout(G)
     pos = nx.shell_layout(G)
     G = set_node_positions(G, pos)
@@ -55,7 +64,7 @@ def generate_gif():
     for i in range(40):
         G = update_scores(G, kill=True, kill_score_cap=150)
         G = keep_node_positions(G, pos_dict)
-        draw_graph(G, f'{i}_varying_prisoner_strat', 'complete/test1', "Test Plot")
+        draw_graph(G, f'{i}_varying_prisoner_strat', 'complete/test1', "Simulating the Prisoner's Dilemma")
     nx.set_node_attributes(G, None, 'agent')
     for u in G.nodes():
         del G.nodes[u]['agent']

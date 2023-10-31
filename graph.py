@@ -43,10 +43,8 @@ def add_agents(
     G, 
     score_vals,
     coop_vals, 
-    n_bunch = None,
     tag='agent'):
-    S = G.subgraph(n_bunch).copy()
-    num_nodes = len(S.nodes())
+    num_nodes = len(G.nodes())
     if not isinstance(score_vals, Iterable):
         score_vals = [score_vals] * num_nodes
     if not isinstance(coop_vals, Iterable):
@@ -55,7 +53,7 @@ def add_agents(
         u: Node(
             score=score_vals[i], 
             coop_prob=coop_vals[i]) 
-        for i, u in enumerate(S.nodes())}
+        for i, u in enumerate(G.nodes())}
     set_node_attributes(G, attrs, tag)
     return G
 
