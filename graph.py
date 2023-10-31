@@ -1,4 +1,4 @@
-# Jacob Collins
+# Author: Jacob Collins
 
 from node import Node
 from networkx import set_node_attributes, neighbors, get_node_attributes
@@ -67,6 +67,8 @@ def get_agent(G, u, tag='agent'):
 def update_scores(
     G, 
     n_bunch=None, 
+    kill=False,
+    kill_score_cap = 100,
     agent_tag='agent', 
     score_tag='score',
     strategy_tag='strategy'):
@@ -78,6 +80,14 @@ def update_scores(
     strategies = {u: get_agent(S, u).get_coop_prob() for u in S}
     set_node_attributes(G, scores, score_tag)
     set_node_attributes(G, strategies, strategy_tag)
+    if not kill:
+        return
+    nodes_to_remove = [u for u in G.nodes() if G.nodes[u][score_tag] > kill_score_cap]
+    for u in nodes_to_remove:
+        G.remove_node(u)
+    return G
+
+                
 
 
 def verify_agents(G):
@@ -87,3 +97,12 @@ def verify_agents(G):
 def run_time_steps(G, n):
     return
 
+def set_node_positions(G, pos):
+    cleaned_pos = {u: tuple(pos[u]) for u in list(pos.keys())}
+    set_node_attributes(G, cleaned_pos, 'pos')
+    return G
+
+
+def keep_node_positions(G, pos_dict):
+    set_node_attributes(G, pos_dict, 'pos')
+    return G
