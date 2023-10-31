@@ -59,7 +59,7 @@ if __name__=='__main__':
     G2 = nx.complete_graph(100)
     add_rand_agents(G2, 0.0, [1.0, 0.0], [0.5, 0.5])
     for _ in range(5):
-        update_scores(G2, score_tag='years_assigned')
+        update_scores(G2)
     nx.set_node_attributes(G2, None, 'agent')
     for u in G2.nodes():
         del G2.nodes[u]['agent']
