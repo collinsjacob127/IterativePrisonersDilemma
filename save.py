@@ -2,7 +2,7 @@
 # Sources: 
 # * [Plotly Tutorial](https://plotly.com/python/network-graphs/)
 
-# from os import makedirs, listdir, getcwd
+from os import makedirs, listdir, getcwd
 from networkx import write_gexf, set_node_attributes, shell_layout
 from graph import set_node_positions
 import plotly.graph_objects as go
