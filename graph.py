@@ -26,6 +26,7 @@ def add_rand_agents(
     tag='agent'):
     attrs = {
         u: Node(
+            id=u,
             score=init_score, 
             coop_prob=float(choice(
                 coop_vals,
@@ -51,6 +52,7 @@ def add_agents(
         coop_vals = [coop_vals] * num_nodes
     attrs = {
         u: Node(
+            id=u,
             score=score_vals[i], 
             coop_prob=coop_vals[i]) 
         for i, u in enumerate(G.nodes())}
@@ -79,11 +81,11 @@ def update_scores(
     set_node_attributes(G, scores, score_tag)
     set_node_attributes(G, strategies, strategy_tag)
     if not kill:
-        return
-    nodes_to_remove = [u for u in G.nodes() if G.nodes[u][score_tag] > kill_score_cap]
+        return []
+    nodes_to_remove = [[u, G.nodes[u][agent_tag]] for u in G.nodes() if G.nodes[u][score_tag] > kill_score_cap]
     for u in nodes_to_remove:
-        G.remove_node(u)
-    return G
+        G.remove_node(u[0])
+    return [u[1] for u in nodes_to_remove]
 
                 
 

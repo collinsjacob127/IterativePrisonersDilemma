@@ -2,11 +2,16 @@
 # Sources: 
 # * [Plotly Tutorial](https://plotly.com/python/network-graphs/)
 
-from os import makedirs, listdir, getcwd
+# from os import makedirs, listdir, getcwd
 from networkx import write_gexf, set_node_attributes, shell_layout
 from graph import set_node_positions
 import plotly.graph_objects as go
 import imageio
+import matplotlib as mpl
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
 
 # Save the graph in gexf format
 def save_gexf(G, filename, dirname):
@@ -143,3 +148,81 @@ def save_gif(filename_skeleton, path):
         for file in sort_by_prefix(filenames, [f'{i}_' for i in range(len(filenames))])]
     images = [imageio.imread(filename) for filename in filtered_files]
     imageio.mimsave(f'{pathname}/{filename_skeleton}.gif', images)
+
+def compareScatter(
+    x_list,
+    y_lists,
+    titles=None,
+    xlabel=None,
+    ylabel=None,
+    name="temp_filename",
+    main_title=None,
+):
+    x_len = len(x_list)
+    for y_list in y_lists:
+        if len(y_list) != x_len:
+            print(
+                f"Array size mismatch in {main_title}"
+                + f"\ny len {len(y_list)} != {x_len}"
+            )
+
+    color_options = [
+        "orangered",
+        "mediumturquoise",
+        "darkviolet",
+        "darkgreen",
+        "lime",
+        "gold",
+        "ivory",
+        "black",
+        "slateblue",
+    ]
+    fig, ax = plt.subplots(1, 1, figsize=(10, 5), dpi=300)
+    if titles == None:
+        for i, y_list in enumerate(y_lists):
+            # ax.scatter(
+            #     x_list, y_list,
+            #     color=color_options[i],
+            #     alpha=0.5,
+            # )
+            ax.fill_between(
+                x_list,
+                y_list,
+                color=color_options[i],
+                alpha=0.3,
+                edgecolor="black",
+                linewidth=0.5,
+            )
+    else:
+        for i, title in enumerate(titles):
+            # ax.scatter(
+            #     x_list, y_lists[i],
+            #     color=color_options[i],
+            #     alpha=0.5,
+            #     label=title,
+            # )
+            ax.fill_between(
+                x_list,
+                y_lists[i],
+                color=color_options[i],
+                alpha=0.3,
+                edgecolor="black",
+                linewidth=0.5,
+                label=title,
+            )
+        ax.legend()
+    ax.grid(
+        visible=True,
+    )
+    if main_title != None:
+        plt.title(f"{main_title}")
+    if xlabel != None:
+        plt.xlabel(xlabel)
+    if ylabel != None:
+        plt.ylabel(ylabel)
+    try:
+        os.mkdir("figs")
+    except FileExistsError:
+        pass
+    plt.savefig(f"figs/{name}.png")
+    plt.clf()
