@@ -7,6 +7,11 @@ from networkx import write_gexf, set_node_attributes, shell_layout
 from graph import set_node_positions
 import plotly.graph_objects as go
 import imageio
+import matplotlib as mpl
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
 
 # Save the graph in gexf format
 def save_gexf(G, filename, dirname):
@@ -21,15 +26,8 @@ def save_gexf(G, filename, dirname):
 #                 Given in the form 'dir1/dir2' or 'dirname'
 #                 (No trailing forward-slash) (Optional)
 # @param pos: The networkx positional layout for the graph (Optional)
-def draw_graph(G, filename, dirname=None, title=None, pos=None):
+def draw_graph(G, filename, dirname=None, title=None):
     kill_score_cap=200
-    # try:
-    #     G.nodes[0]['pos'] != None
-    # except:
-    #     # Positions have not been set
-    #     print("Positions were not set")
-    #     pos = shell_layout(G)
-    #     set_node_positions(G, pos)
     # Add edges to plot
     edge_x = []
     edge_y = []
@@ -71,21 +69,24 @@ def draw_graph(G, filename, dirname=None, title=None, pos=None):
             color=[],
             size=10,
             colorbar=dict(
+                tick0=0,
+                dtick=20,
                 thickness=15,
                 tickfont=dict(
                         family="Courier New, monospace",
-                        size=10,
+                        size=14,
                         color="LightGray"
                         ),
                 title={
                     'text': 'Years Imprisoned',
                     'font': dict(
                         family="Courier New, monospace",
-                        size=12,
+                        size=20,
                         color="LightGray"
                     )},
                 xanchor='left',
                 titleside='right',
+                x=1
             ),
             line_width=2))
     # Color Node Points
@@ -119,7 +120,7 @@ def draw_graph(G, filename, dirname=None, title=None, pos=None):
             'text': "Simulating the Prisoner's Dilemma",
             'font': dict(
                 family="Courier New, monospace",
-                size=18,
+                size=30,
                 color="White"
             ),
             'y': 0.97,
@@ -128,7 +129,7 @@ def draw_graph(G, filename, dirname=None, title=None, pos=None):
             'yanchor': 'top' })
     dir_path = f'graphs/{dirname}/'
     makedirs(dir_path, exist_ok=True)
-    fig.write_image(f'{dir_path}{filename}.png', format='png')
+    fig.write_image(f'{dir_path}{filename}.png', format='png', width=1024, height=768)
 
 
 def sort_by_prefix(filenames, prefix_list):
@@ -147,3 +148,81 @@ def save_gif(filename_skeleton, path):
         for file in sort_by_prefix(filenames, [f'{i}_' for i in range(len(filenames))])]
     images = [imageio.imread(filename) for filename in filtered_files]
     imageio.mimsave(f'{pathname}/{filename_skeleton}.gif', images)
+
+def compareScatter(
+    x_list,
+    y_lists,
+    titles=None,
+    xlabel=None,
+    ylabel=None,
+    name="temp_filename",
+    main_title=None,
+):
+    x_len = len(x_list)
+    for y_list in y_lists:
+        if len(y_list) != x_len:
+            print(
+                f"Array size mismatch in {main_title}"
+                + f"\ny len {len(y_list)} != {x_len}"
+            )
+
+    color_options = [
+        "orangered",
+        "mediumturquoise",
+        "darkviolet",
+        "darkgreen",
+        "lime",
+        "gold",
+        "ivory",
+        "black",
+        "slateblue",
+    ]
+    fig, ax = plt.subplots(1, 1, figsize=(10, 5), dpi=300)
+    if titles == None:
+        for i, y_list in enumerate(y_lists):
+            # ax.scatter(
+            #     x_list, y_list,
+            #     color=color_options[i],
+            #     alpha=0.5,
+            # )
+            ax.fill_between(
+                x_list,
+                y_list,
+                color=color_options[i],
+                alpha=0.3,
+                edgecolor="black",
+                linewidth=0.5,
+            )
+    else:
+        for i, title in enumerate(titles):
+            # ax.scatter(
+            #     x_list, y_lists[i],
+            #     color=color_options[i],
+            #     alpha=0.5,
+            #     label=title,
+            # )
+            ax.fill_between(
+                x_list,
+                y_lists[i],
+                color=color_options[i],
+                alpha=0.3,
+                edgecolor="black",
+                linewidth=0.5,
+                label=title,
+            )
+        ax.legend()
+    ax.grid(
+        visible=True,
+    )
+    if main_title != None:
+        plt.title(f"{main_title}")
+    if xlabel != None:
+        plt.xlabel(xlabel)
+    if ylabel != None:
+        plt.ylabel(ylabel)
+    try:
+        os.mkdir("figs")
+    except FileExistsError:
+        pass
+    plt.savefig(f"figs/{name}.png")
+    plt.clf()

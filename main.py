@@ -11,12 +11,16 @@ Sources:
 '''
 
 import networkx as nx
+from numpy import floor, mean
 from graph import *
 from save import *
 
 def example():
-    G1 = nx.complete_graph(6)
-    add_agents(G1, 0, [1,1,1,0,0,0])
+    n = 6
+    G1 = nx.complete_graph(n)
+    coop_prop = 0.9
+    n_coop = int(floor(n*coop_prop))
+    add_agents(G1, 0, [0.8]*n_coop + [0.2]*(n-n_coop))
     print("Constant Strategies (Default)")
     for u in G1.nodes():
         print(f'{u}: {get_agent(G1, u)}')
@@ -30,7 +34,7 @@ def example():
     print("")
     
     print("Probabilistic Strategies")
-    G2 = nx.complete_graph(5)
+    G2 = nx.complete_graph(n)
     add_rand_agents(G2, 0, [0.8, 0.2], [0.5, 0.5])
     for u in G2.nodes():
         print(f'{u}: {get_agent(G2, u)}')
@@ -46,26 +50,90 @@ def example():
 # 90% of prisoners have an 80% chance to cooperate
 # 10% of prisoners have a 20% chance to cooperate
 def generate_gif():
-    G = nx.gnp_random_graph(100, 0.05, seed=1)
-    add_rand_agents(G, 0.0, [0.8, 0.2], [0.9, 0.1])
+    n = 20
+    G = nx.complete_graph(n)
+    # G = nx.gnp_random_graph(n, 5/(n+5), seed=1)
+    # add_rand_agents(G, 0.0, [0.8, 0.2], [0.9, 0.1])
+    coop_prop = 0.5
+    n_coop = int(floor(n*coop_prop))
+    # add_agents(G, 0, [0.8]*n_coop + [0.2]*(n-n_coop))
+    add_agents(G, 0, [1.0]*n_coop + [0.0]*(n-n_coop))
+
     # pos = nx.spectral_layout(G)
     pos = nx.shell_layout(G)
     G = set_node_positions(G, pos)
     pos_dict = get_node_attributes(G, 'pos')
+    removed_nodes = []
     for i in range(40):
-        G = update_scores(G, kill=True, kill_score_cap=150)
+        removed_nodes += update_scores(G, kill=False, kill_score_cap=1000)
         G = keep_node_positions(G, pos_dict)
-        draw_graph(G, f'{i}_varying_prisoner_strat', 'complete/test1', "Test Plot")
-    nx.set_node_attributes(G, None, 'agent')
+        draw_graph(G, f'{i}_varying_prisoner_strat', 'complete/test1', "Simulating the Prisoner's Dilemma")
+    print("Dead:")
+    for u in removed_nodes:
+        print(u)
+    print("Alive:")
     for u in G.nodes():
-        del G.nodes[u]['agent']
+        print(G.nodes[u]['agent'])
     save_gif('varying_prisoner_strat', 'complete/test1')
+    
+def test_proportions():
+    n = 100
+    # G = nx.gnp_random_graph(n, 0.05)
+    max_degree = 10
+    for k in range(2, 6):
+        # G = nx.configuration_model([np.random.choice(list(range(1,max_degree))) for _ in range(n)])
+        deg_seq = np.random.poisson(k, size=n).tolist()
+        if sum(deg_seq) % 2 != 0:
+            deg_seq[0] += 1
+        G = nx.configuration_model(deg_seq)
+        y_lists = [[], []]
+        x_list = [0.1 * i for i in range(11)]
+        for coop_prop in x_list:
+            
+            n_coop = int(floor(n*coop_prop))
+            add_agents(G, 0, [1.0]*n_coop + [0.0]*(n-n_coop))
+
+            for _ in range(40):
+                update_scores(G)
+
+            coop_years = []
+            defect_years = []
+            for u in G.nodes():
+                node = G.nodes[u]['agent']
+                if node.get_coop_prob() == 1.0:
+                    coop_years.append(node.get_score())
+                else:
+                    defect_years.append(node.get_score())
+
+            print(f'coop_prob: {mean(coop_prop)}')
+            print(f'    defect_years: {mean(defect_years)}')
+            if len(defect_years) > 0:
+                y_lists[0].append(mean(defect_years))
+            else:
+                y_lists[0].append(0)
+            print(f'    coop_years: {mean(coop_years)}')
+            if len(coop_years) > 0:
+                y_lists[1].append(mean(coop_years))
+            else:
+                y_lists[1].append(0)
+        compareScatter(
+            x_list=x_list,
+            y_lists=y_lists,
+            titles=[
+                "Defectors",
+                "Cooperators",
+            ],
+            xlabel="Proportion of Cooperators",
+            ylabel="Years Assigned",
+            name=f'poisson_config_{k}',
+            main_title=f"Years Assigned - Config Model k={k}"
+        )
     
 
 if __name__=='__main__':
     n = 10
 
-    generate_gif()
+    test_proportions()
 
     # G1 = nx.path_graph(n)
     # add_agents(G1, 0.0, [1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0])

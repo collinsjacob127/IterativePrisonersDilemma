@@ -5,14 +5,16 @@ from numpy.random import rand
 class Node():
 
     score = None
+    id = None
     coop_prob = float()
     sucker = float()
     punishment = float()
     reward = float()
     temptation = float()
 
-    def __init__(self, score, coop_prob):
+    def __init__(self, score, coop_prob, id=0):
         self.score=score
+        self.id=id
         self.coop_prob=coop_prob
         self.sucker = 3
         self.punishment = 2
@@ -20,7 +22,7 @@ class Node():
         self.tempation = 0
 
     def __repr__(self):
-        return f"({self.score}, {self.coop_prob})"
+        return f"{self.id}: ({self.score}, {self.coop_prob})"
 
         
     def get_score(self):
@@ -49,7 +51,7 @@ class Node():
         if (self_choice and not opponent_choice):
             self.score += self.sucker
         # Both were evil
-        if not (self_choice and opponent_choice):
+        if (not self_choice and not opponent_choice):
             self.score += self.punishment
         return self_choice
         
