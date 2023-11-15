@@ -51,8 +51,8 @@ def example():
 # 10% of prisoners have a 20% chance to cooperate
 def generate_gif():
     n = 20
-    G = nx.complete_graph(n)
-    # G = nx.gnp_random_graph(n, 5/(n+5), seed=1)
+    # G = nx.complete_graph(n)
+    G = nx.gnp_random_graph(n, 5/(n+5), seed=1)
     add_rand_agents(G, 0.0, [0.8, 0.2], [0.9, 0.1])
     coop_prop = 0.5
     n_coop = int(floor(n*coop_prop))
@@ -63,7 +63,7 @@ def generate_gif():
     pos = nx.shell_layout(G)
     G = set_node_positions(G, pos)
     pos_dict = get_node_attributes(G, 'pos')
-    # update_score_attribute(G)
+    update_score_attribute(G)
     removed_nodes = []
     for i in range(40):
         removed_nodes += update_scores(G, kill=True, kill_score_cap=700)
@@ -75,7 +75,7 @@ def generate_gif():
     print("Alive:")
     for u in G.nodes():
         print(G.nodes[u]['agent'])
-    save_gif('varying_prisoner_strat', 'complete/test1')
+    save_gif('varying_prisoner_strat', dirname='gnp', 'gnp/test1')
     
 def test_proportions():
     n = 100

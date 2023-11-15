@@ -54,5 +54,3 @@ class Node():
         if (not self_choice and not opponent_choice):
             self.score += self.punishment
         return self_choice
-        
-        

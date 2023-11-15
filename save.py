@@ -140,8 +140,9 @@ def sort_by_prefix(filenames, prefix_list):
                 filenames_out.append(file)
     return filenames_out
     
-def save_gif(filename_skeleton, path):
-    pathname = f'{getcwd()}/graphs/{path}'
+def save_gif(filename_skeleton, dirname='test1', filename='test'):
+    makedirs(f'graphs/{dirname}', exist_ok=True)
+    pathname = f'{getcwd()}/graphs/{dirname}'
     filenames = [file for file in listdir(pathname) if file.endswith('.png')]
     filtered_files = [
         f'{pathname}/{file}' 
