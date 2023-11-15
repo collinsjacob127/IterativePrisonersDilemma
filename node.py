@@ -67,6 +67,7 @@ class Node():
         if (not self_choice and not opponent_choice):
             self.score += self.punishment
             u.score += u.punishment
+            # Maybe add some takeover here? Or a negative reward?
             #No Take Over
 
         return self_choice

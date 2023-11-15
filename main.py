@@ -63,12 +63,12 @@ def generate_gif():
     pos = nx.shell_layout(G)
     G = set_node_positions(G, pos)
     pos_dict = get_node_attributes(G, 'pos')
-    # update_score_attribute(G)
+    update_score_attribute(G)
     removed_nodes = []
     for i in range(40):
         removed_nodes += update_scores(G, kill=True, kill_score_cap=700)
         G = keep_node_positions(G, pos_dict)
-        draw_graph(G, f'{i}_varying_prisoner_strat', 'complete/test1', "Simulating the Prisoner's Dilemma")
+        draw_graph(G, f'{i}_varying_prisoner_strat', 'test1', "Simulating the Prisoner's Dilemma")
     print("Dead:")
     for u in removed_nodes:
         print(u)
@@ -88,7 +88,7 @@ def test_proportions():
             deg_seq[0] += 1
         G = nx.configuration_model(deg_seq)
         y_lists = [[], []]
-        x_list = [0.1 * i for i in range(11)]
+        x_list = [0.05 * i for i in range(21)]
         for coop_prop in x_list:
             
             n_coop = int(floor(n*coop_prop))
@@ -101,7 +101,7 @@ def test_proportions():
             defect_years = []
             for u in G.nodes():
                 node = G.nodes[u]['agent']
-                if node.get_coop_prob() == 1.0:
+                if node.get_coop_prob() > 0.5:
                     coop_years.append(node.get_score())
                 else:
                     defect_years.append(node.get_score())
@@ -130,12 +130,49 @@ def test_proportions():
             main_title=f"Years Assigned - Config Model k={k}"
         )
     
+def test_takeover():
+    n = 100
+    G = nx.gnp_random_graph(n, 0.05)
+    max_degree = 10
+    for k in range(2, 6):
+        # G = nx.configuration_model([np.random.choice(list(range(1,max_degree))) for _ in range(n)])
+        # deg_seq = np.random.poisson(k, size=n).tolist()
+        # if sum(deg_seq) % 2 != 0:
+        #     deg_seq[0] += 1
+        # G = nx.configuration_model(deg_seq)
+        prop_list = [0.05 * i for i in range(21)]
+        for coop_prop in prop_list:
+            n_coop = int(floor(n*coop_prop))
+            add_agents(G, 0, [1.0]*n_coop + [0.0]*(n-n_coop))
+
+            n_iter=40
+            x_list = range(n_iter)
+            y_lists = []
+            for _ in range(n):
+                y_lists.append([])
+            for _ in range(n_iter):
+                update_scores(G)
+
+                for u in G.nodes():
+                    node = G.nodes[u]['agent']
+                    y_lists[u].append(node.get_coop_prob())
+            manyLines(
+                x_list=x_list,
+                y_lists=y_lists,
+                yrange=(-0.02, 1.02),
+                xlabel="Time Step",
+                ylabel="Cooperation Probability",
+                name=f'gnp_takeover_{coop_prop}',
+                title=f"Development of Takeover"
+            )
+    
 
 if __name__=='__main__':
     n = 10
 
+    test_takeover()
     # test_proportions()
-    generate_gif()
+    # generate_gif()
 
     # G1 = nx.path_graph(n)
     # add_agents(G1, 0.0, [1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0])

@@ -226,3 +226,133 @@ def compareScatter(
         pass
     plt.savefig(f"figs/{name}.png")
     plt.clf()
+
+def manyLines(
+    x_list,
+    y_lists,
+    y_labels=None,
+    title=None,
+    subtitle=None,
+    xlabel=None,
+    ylabel=None,
+    logx=False,
+    logy=False,
+    xrange=None, #Tuple
+    yrange=None, #Tuple
+    legend_pos=0,
+    size=10,
+    name="temp_filename",
+    dirname="figs",
+):
+    x_len = len(x_list)
+    for y_list in y_lists:
+        if len(y_list) != x_len:
+            print(
+                f"Array size mismatch in {title}"
+                + f"\ny len {len(y_list)} != {x_len}"
+            )
+
+    alpha = 0.8
+    if len(y_lists) > 1:
+        alpha = 0.3
+    fig, ax = plt.subplots(1, 1, figsize=(10, 5), dpi=300)
+    # Set up Axis Definition
+    min_x = min(x_list)
+    max_x = max(x_list)
+    min_y = min([min(y_list) for y_list in y_lists])
+    max_y = max([max(y_list) for y_list in y_lists]) 
+    max_y = max_y + (max_y - min_y)*0.05 # 5% vertical buffer
+    if (xrange):
+        min_x = xrange[0]
+        max_x = xrange[1]
+    if (yrange):
+        min_y = yrange[0]
+        max_y = yrange[1]
+    ax.axis([
+        min_x,
+        max_x,
+        min_y,
+        max_y])
+    fg_color = 'white'
+    fg_color2 = 'grey'
+    bg_color='black'
+    ax.patch.set_facecolor(bg_color)
+    ax.tick_params(color=fg_color, labelcolor=fg_color)
+    for spine in ax.spines.values():
+        spine.set_edgecolor(fg_color)
+    fig.patch.set_facecolor(bg_color)
+    ax.grid(
+        visible=True,
+        alpha=0.7,
+        color=fg_color,
+        linewidth=0.5,
+    )
+    
+    if y_labels == None:
+        for i, y_list in enumerate(y_lists):
+            ax.plot(
+                x_list,
+                y_list,
+                color="white",
+                alpha=alpha,
+                # edgecolor="black",
+                linewidth=0.5,
+            )
+    else:
+        for i, label in enumerate(y_labels):
+            ax.fill_between(
+                x_list,
+                y_lists[i],
+                color="white",
+                alpha=alpha,
+                # edgecolor="black",
+                linewidth=0.5,
+                label=label,
+            )
+        ax.legend(loc=legend_pos)
+    # if len(y_lists) == 1 and label_vals:
+    #     for i, x in enumerate(x_list):
+    #         text_str = f'{np.round(y_lists[0][i], 2).__float__()}'
+    #         flip = 1 # 1 => left side, 0 => right side
+    #         if i == 0:
+    #             flip = 0 # First label should be right of point
+    #         elif i < len(x_list)-1 and i > 0:
+    #             if y_list[i] < y_list[i-1]: # Was decreasing, don't put left
+    #                 flip = 0
+    #         if flip:
+    #             x_offset = -1*(len(text_str)+0.5)*size*2
+    #         ax.annotate(
+    #             text_str,
+    #             (x, y_lists[0][i]),
+    #             # xytext=(-len(text_str)*size,-0.5*size),
+    #             xytext=(x_offset,0),
+    #             textcoords="offset pixels",
+    #             color=fg_color,
+    #             fontsize=8)
+    if title:
+        if subtitle:
+            mid = (fig.subplotpars.right + fig.subplotpars.left)/2
+            plt.title(f"{subtitle}", color=fg_color2, size=12)
+            plt.suptitle(f"{title}", color=fg_color, size=18, x=mid)
+        else:
+            plt.title(f"{title}", color=fg_color, size=18)
+    if xlabel:
+        if logx:
+            plt.xscale('log')
+            plt.xlabel(f'Log {xlabel}', color=fg_color)
+        else:
+            plt.xlabel(xlabel, color=fg_color)
+    if ylabel:
+        if logy:
+            plt.yscale('log')
+            ax.yaxis.set_major_formatter(ticker.FuncFormatter(myLogFormat))
+            plt.ylabel(f'Log {ylabel}', color=fg_color)
+        else:
+            plt.ylabel(ylabel, color=fg_color)
+    try:
+        os.mkdir(dirname)
+    except FileExistsError:
+        pass
+    plt.savefig(f"{dirname}/{name}.png")
+    plt.clf()
+    plt.close()
