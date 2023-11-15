@@ -75,7 +75,7 @@ def generate_gif():
     print("Alive:")
     for u in G.nodes():
         print(G.nodes[u]['agent'])
-    save_gif('varying_prisoner_strat', 'complete/test1')
+    save_gif('varying_prisoner_strat', 'test1')
     
 def test_proportions():
     n = 100
