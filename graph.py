@@ -7,17 +7,17 @@ from collections.abc import Iterable
 #import networkx as nx
 
 
-# Function for generating a network of agents
-# @param G: A graph to add agents to the nodes of
-# @param init_score: the score to set the initial value of prisoners to
-# @param coop_vals: list of possible starting coop_probs for prisoners
-# @param coop_odds: probability of a node having the coop_prob assosciated with
-#                   the corresponding index in coop_vals
-
-
-# Agents are initialized with randomized scores and coop probs based on 
-#   our defined probability distribution and matching coop_prob list
-# @return G: The input graph, with agents in G.node[u][tag]
+'''
+Function for generating a network of agents
+@param G: A graph to add agents to the nodes of
+@param init_score: the score to set the initial value of prisoners to
+@param coop_vals: list of possible starting coop_probs for prisoners
+@param coop_odds: probability of a node having the coop_prob assosciated with
+                  the corresponding index in coop_vals
+Agents are initialized with randomized scores and coop probs based on 
+  our defined probability distribution and matching coop_prob list
+@return G: The input graph, with agents in G.node[u][tag]
+'''
 def add_rand_agents(
     G, 
     init_score=0, 
@@ -63,7 +63,14 @@ def add_agents(
 def get_agent(G, u, tag='agent'):
     return G.nodes[u][tag]
     
+
+def update_score_attribute(G, score_tag='score', strategy_tag='strategy'):
+    scores = {u: get_agent(G, u).get_score() for u in G}
+    strategies = {u: get_agent(G, u).get_coop_prob() for u in G}
+    set_node_attributes(G, scores, score_tag)
+    set_node_attributes(G, strategies, strategy_tag)
     
+
 def update_scores(
     G, 
     n_bunch=None, 
@@ -76,18 +83,12 @@ def update_scores(
     for u in S.nodes():
         for v in neighbors(S, u):
             S.nodes[u][agent_tag].update_score(S.nodes[v][agent_tag])
-    scores = {u: get_agent(S, u).get_score() for u in S}
-    strategies = {u: get_agent(S, u).get_coop_prob() for u in S}
-    set_node_attributes(G, scores, score_tag)
-    set_node_attributes(G, strategies, strategy_tag)
     if not kill:
         return []
     nodes_to_remove = [[u, G.nodes[u][agent_tag]] for u in G.nodes() if G.nodes[u][score_tag] > kill_score_cap]
     for u in nodes_to_remove:
         G.remove_node(u[0])
     return [u[1] for u in nodes_to_remove]
-
-                
 
 
 def verify_agents(G):

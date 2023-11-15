@@ -53,7 +53,7 @@ def generate_gif():
     n = 20
     G = nx.complete_graph(n)
     # G = nx.gnp_random_graph(n, 5/(n+5), seed=1)
-    # add_rand_agents(G, 0.0, [0.8, 0.2], [0.9, 0.1])
+    add_rand_agents(G, 0.0, [0.8, 0.2], [0.9, 0.1])
     coop_prop = 0.5
     n_coop = int(floor(n*coop_prop))
     # add_agents(G, 0, [0.8]*n_coop + [0.2]*(n-n_coop))
@@ -63,9 +63,10 @@ def generate_gif():
     pos = nx.shell_layout(G)
     G = set_node_positions(G, pos)
     pos_dict = get_node_attributes(G, 'pos')
+    # update_score_attribute(G)
     removed_nodes = []
     for i in range(40):
-        removed_nodes += update_scores(G, kill=False, kill_score_cap=1000)
+        removed_nodes += update_scores(G, kill=True, kill_score_cap=700)
         G = keep_node_positions(G, pos_dict)
         draw_graph(G, f'{i}_varying_prisoner_strat', 'complete/test1', "Simulating the Prisoner's Dilemma")
     print("Dead:")
@@ -133,7 +134,8 @@ def test_proportions():
 if __name__=='__main__':
     n = 10
 
-    test_proportions()
+    # test_proportions()
+    generate_gif()
 
     # G1 = nx.path_graph(n)
     # add_agents(G1, 0.0, [1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0])
@@ -157,7 +159,6 @@ if __name__=='__main__':
     # save_gexf(G2, 'varying_prisoner_strat.gexf', 'complete')
     # draw_graph(G2, 'varying_prisoner_strat.gexf', 'complete')
 
-
     # G1 = nx.path_graph(n)
     # add_agents(G1, 0.0, [1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0])
     # # update_scores(G1, [1, 2]) # Updates the scores of nodes 1 and 2
@@ -167,4 +168,3 @@ if __name__=='__main__':
     # for u in G1.nodes():
     #     del G1.nodes[u]['agent']
     # nx.write_gexf(G1, "graphs/path_constant_strat.gexf")
-    
