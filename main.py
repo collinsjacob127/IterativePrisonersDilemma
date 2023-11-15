@@ -75,7 +75,11 @@ def generate_gif():
     print("Alive:")
     for u in G.nodes():
         print(G.nodes[u]['agent'])
+<<<<<<< HEAD
     save_gif('varying_prisoner_strat', dirname='gnp', 'gnp/test1')
+=======
+    save_gif('varying_prisoner_strat', 'test1')
+>>>>>>> 10fe856fc5a495e7685aa8c8fc6f63ef00ae1160
     
 def test_proportions():
     n = 100
