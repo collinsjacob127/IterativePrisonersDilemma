@@ -76,6 +76,7 @@ def update_scores(
     n_bunch=None, 
     kill=False,
     kill_score_cap = 100,
+    takeover=True,
     agent_tag='agent', 
     score_tag='score',
     strategy_tag='strategy'):
@@ -96,7 +97,7 @@ def update_scores(
     """
     for u, v in G.edges():
         # Get u and v coop prob, have them play, whoever loses adjust their strategy
-        G.nodes[u][agent_tag].update_score(G.nodes[v][agent_tag])
+        G.nodes[u][agent_tag].update_score(G.nodes[v][agent_tag], takeover=takeover)
     
     update_score_attribute(G)
     return []

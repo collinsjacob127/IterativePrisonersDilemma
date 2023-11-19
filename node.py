@@ -38,7 +38,7 @@ class Node():
 
     # u is an instance of another node
     # Compare their strategies and update score accordingly
-    def update_score(self, u):
+    def update_score(self, u, takeover=True):
         opponent_choice = u.strategy()
         self_choice = self.strategy()
         # Both cooperate
@@ -53,7 +53,8 @@ class Node():
             u.score += u.sucker
 
             # U is taken over by self
-            u.taken_over_by(self.coop_prob)
+            if takeover:
+                u.taken_over_by(self.coop_prob)
 
         # Huge L
         if (self_choice and not opponent_choice):
@@ -61,7 +62,8 @@ class Node():
             u.score += u.temptation
 
             # self is taken over by u
-            self.taken_over_by(u.get_coop_prob())
+            if takeover:
+                self.taken_over_by(u.get_coop_prob())
 
         # Both were evil
         if (not self_choice and not opponent_choice):
@@ -70,8 +72,6 @@ class Node():
             #No Take Over
 
         return self_choice
-<<<<<<< HEAD
-=======
         
     def taken_over_by(self, new_strategy):
         # Gets called on a node that is getting taken over
@@ -90,4 +90,3 @@ class Node():
 
         # update to the new strategy
         self.coop_prob = current_strategy
->>>>>>> 10fe856fc5a495e7685aa8c8fc6f63ef00ae1160
