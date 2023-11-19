@@ -349,9 +349,9 @@ def compareLines(
         max_x,
         min_y,
         max_y])
-    fg_color = 'white'
-    fg_color2 = 'grey'
-    bg_color='black'
+    fg_color = 'black'
+    fg_color2 = '#1a1a1a'
+    bg_color='white'
     ax.patch.set_facecolor(bg_color)
     ax.tick_params(color=fg_color, labelcolor=fg_color)
     for spine in ax.spines.values():
@@ -420,7 +420,7 @@ def compareLines(
     if title:
         if subtitle:
             mid = (fig.subplotpars.right + fig.subplotpars.left)/2
-            plt.title(f"{subtitle}", color=fg_color2, size=12)
+            plt.title(f"{subtitle}", color=fg_color2, size=14)
             plt.suptitle(f"{title}", color=fg_color, size=18, x=mid)
         else:
             plt.title(f"{title}", color=fg_color, size=18)
@@ -510,20 +510,20 @@ def manyLines(
             ax.plot(
                 x_list,
                 y_list,
-                color="white",
+                color="black",
                 alpha=alpha,
                 # edgecolor="black",
-                linewidth=0.5,
+                linewidth=1,
             )
     else:
         for i, label in enumerate(y_labels):
             ax.fill_between(
                 x_list,
                 y_lists[i],
-                color="white",
+                color="black",
                 alpha=alpha,
                 # edgecolor="black",
-                linewidth=0.5,
+                linewidth=1,
                 label=label,
             )
         ax.legend(loc=legend_pos)
@@ -549,7 +549,7 @@ def manyLines(
     if title:
         if subtitle:
             mid = (fig.subplotpars.right + fig.subplotpars.left)/2
-            plt.title(f"{subtitle}", color=fg_color2, size=12)
+            plt.title(f"{subtitle}", color=fg_color2, size=14)
             plt.suptitle(f"{title}", color=fg_color, size=18, x=mid)
         else:
             plt.title(f"{title}", color=fg_color, size=18)

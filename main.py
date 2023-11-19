@@ -89,7 +89,7 @@ def test_proportions():
             deg_seq[0] += 1
         G = nx.configuration_model(deg_seq)
         y_lists = [[], [], []]
-        x_list = [0.05 * i for i in range(21)]
+        x_list = [0.01 * i for i in range(101)]
         for coop_prop in x_list:
             n_coop = int(floor(n*coop_prop))
             add_agents(G, 0, [1.0]*n_coop + [0.0]*(n-n_coop))
@@ -138,38 +138,38 @@ def test_takeover():
     n = 100
     G = nx.gnp_random_graph(n, 0.05)
     max_degree = 10
-    for k in range(2, 6):
+    # for k in range(2, 6):
         # G = nx.configuration_model([np.random.choice(list(range(1,max_degree))) for _ in range(n)])
         # deg_seq = np.random.poisson(k, size=n).tolist()
         # if sum(deg_seq) % 2 != 0:
         #     deg_seq[0] += 1
         # G = nx.configuration_model(deg_seq)
-        prop_list = [0.05 * i for i in range(21)]
-        for coop_prop in prop_list:
-            n_coop = int(floor(n*coop_prop))
-            add_agents(G, 0, [1.0]*n_coop + [0.0]*(n-n_coop))
+    prop_list = [0.05 * i for i in range(21)]
+    for coop_prop in prop_list:
+        n_coop = int(floor(n*coop_prop))
+        add_agents(G, 0, [1.0]*n_coop + [0.0]*(n-n_coop))
 
-            n_iter=40
-            x_list = range(n_iter)
-            y_lists = []
-            for _ in range(n):
-                y_lists.append([])
-            for _ in range(n_iter):
-                update_scores(G)
+        n_iter=40
+        x_list = range(n_iter)
+        y_lists = []
+        for _ in range(n):
+            y_lists.append([])
+        for _ in range(n_iter):
+            for u in G.nodes():
+                node = G.nodes[u]['agent']
+                y_lists[u].append(node.get_coop_prob())
+            update_scores(G)
 
-                for u in G.nodes():
-                    node = G.nodes[u]['agent']
-                    y_lists[u].append(node.get_coop_prob())
-            manyLines(
-                x_list=x_list,
-                y_lists=y_lists,
-                yrange=(-0.02, 1.02),
-                xlabel="Time Step",
-                ylabel="Cooperation Probability",
-                name=f'gnp_takeover_{coop_prop}',
-                title=f"Development of Takeover",
-                subtitle=r"$G_{" + f"{n},{np.round(coop_prop,1)}" + r"}$",
-            )
+        manyLines(
+            x_list=x_list,
+            y_lists=y_lists,
+            yrange=(-0.02, 1.02),
+            xlabel="Time Step",
+            ylabel="Cooperation Probability",
+            name=f'gnp_takeover_{np.round(coop_prop*100,0)}',
+            title=f"Development of Takeover",
+            subtitle=r"$G_{100,0.05}$" + f', Starting with {np.round(coop_prop*100,2)}% Cooperators',
+        )
 
 if __name__=='__main__':
     n = 10
