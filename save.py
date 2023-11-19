@@ -300,6 +300,7 @@ def compareScatter(
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
+    plt.savefig(f"{dirname}/{name}.svg", format='svg')
     plt.clf()
 
 def compareLines(
@@ -441,6 +442,7 @@ def compareLines(
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
+    plt.savefig(f"{dirname}/{name}.svg", format='svg')
     plt.clf()
 
 def manyLines(
@@ -570,5 +572,6 @@ def manyLines(
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
+    plt.savefig(f"{dirname}/{name}.png", format='svg')
     plt.clf()
     plt.close()
