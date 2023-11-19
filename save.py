@@ -292,7 +292,6 @@ def compareScatter(
     if ylabel:
         if logy:
             plt.yscale('log')
-            ax.yaxis.set_major_formatter(ticker.FuncFormatter(myLogFormat))
             plt.ylabel(f'Log {ylabel}', color=fg_color)
         else:
             plt.ylabel(ylabel, color=fg_color)
