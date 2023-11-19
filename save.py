@@ -433,7 +433,7 @@ def compareLines(
     if ylabel:
         if logy:
             plt.yscale('log')
-            ax.yaxis.set_major_formatter(ticker.FuncFormatter(myLogFormat))
+            # ax.yaxis.set_major_formatter(ticker.FuncFormatter(myLogFormat))
             plt.ylabel(f'Log {ylabel}', color=fg_color)
         else:
             plt.ylabel(ylabel, color=fg_color)
@@ -490,9 +490,9 @@ def manyLines(
         max_x,
         min_y,
         max_y])
-    fg_color = 'white'
-    fg_color2 = 'grey'
-    bg_color='black'
+    fg_color = 'black'
+    fg_color2 = '#1a1a1a'
+    bg_color='white'
     ax.patch.set_facecolor(bg_color)
     ax.tick_params(color=fg_color, labelcolor=fg_color)
     for spine in ax.spines.values():
