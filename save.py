@@ -140,25 +140,37 @@ def sort_by_prefix(filenames, prefix_list):
                 filenames_out.append(file)
     return filenames_out
     
-def save_gif(filename_skeleton, dirname='test1', filename='test'):
+def save_gif(filename_skeleton, dirname='test1'):
+    print(f'Save Gif')
     makedirs(f'graphs/{dirname}', exist_ok=True)
-    pathname = f'{getcwd()}/graphs/{dirname}'
+    # pathname = f'{getcwd()}/graphs/{dirname}/'
+    pathname = f'graphs/{dirname}/'
+    print(f'Dir contents:\n{listdir(pathname)}')
     filenames = [file for file in listdir(pathname) if file.endswith('.png')]
+    print(f"Found filenames:\n{filenames}")
     filtered_files = [
         f'{pathname}/{file}' 
         for file in sort_by_prefix(filenames, [f'{i}_' for i in range(len(filenames))])]
+    print(f"Filtered files:\n{filtered_files}")
     images = [imageio.imread(filename) for filename in filtered_files]
     imageio.mimsave(f'{pathname}/{filename_skeleton}.gif', images)
 
-def get_color(i):
+def get_color(i, darktheme=False):
     color_options = [
-        "#ff0000", # True Red
-        "#00ff00", # True Green
-        "#8fa7ff", # True Blue (?)
-        "yellow",
-        "purple",
-        "white",
+        "#000000", # Black
+        "#92140C", # Red
+        "#390099", # Purple
+        "#F5853F", # Orange
+        "#2E86AB", # Blue
     ]
+    if darktheme:
+        color_options = [
+            "#FFFFFF", # White
+            "#A4243B", # Red
+            "#2B9720", # Green
+            "#D8973C", # Orange
+            "#45A3D9", # Blue
+        ]
     return color_options[i % len(color_options)]
     
     
@@ -176,6 +188,7 @@ def compareScatter(
     yrange=None, #Tuple
     legend_pos=0,
     size=10,
+    darktheme=False,
     name="temp_filename",
     dirname="figs",
 ):
@@ -211,6 +224,10 @@ def compareScatter(
     fg_color = 'white'
     fg_color2 = 'grey'
     bg_color='black'
+    if darktheme:
+        fg_color = 'black'
+        fg_color2 = 'grey'
+        bg_color='white'
     ax.patch.set_facecolor(bg_color)
     ax.tick_params(color=fg_color, labelcolor=fg_color)
     for spine in ax.spines.values():
@@ -228,14 +245,14 @@ def compareScatter(
             ax.fill_between(
                 x_list,
                 y_list,
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 alpha=alpha,
-                edgecolor="black",
+                edgecolor=get_color(i, darktheme),
                 linewidth=0.5,
             )
             ax.scatter(
                 x_list, y_list,
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 s=size,
                 alpha=alpha + ((1-alpha)/2),
             )
@@ -244,15 +261,15 @@ def compareScatter(
             ax.fill_between(
                 x_list,
                 y_lists[i],
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 alpha=alpha,
-                edgecolor="black",
+                edgecolor=get_color(i, darktheme),
                 linewidth=0.5,
                 label=label,
             )
             ax.scatter(
                 x_list, y_lists[i],
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 alpha=alpha + ((1-alpha)/2),
                 s=size,
             )
@@ -295,13 +312,16 @@ def compareScatter(
             plt.ylabel(f'Log {ylabel}', color=fg_color)
         else:
             plt.ylabel(ylabel, color=fg_color)
+    svgdirname = dirname + "-svg" 
     try:
         os.mkdir(dirname)
+        os.mkdir(svgdirname)
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
-    plt.savefig(f"{dirname}/{name}.svg", format='svg')
+    plt.savefig(f"{svgdirname}/{name}.svg", format='svg')
     plt.clf()
+    plt.close()
 
 def compareLines(
     x_list,
@@ -317,6 +337,7 @@ def compareLines(
     yrange=None, #Tuple
     legend_pos=0,
     size=10,
+    darktheme=False,
     name="temp_filename",
     dirname="figs",
 ):
@@ -352,6 +373,10 @@ def compareLines(
     fg_color = 'black'
     fg_color2 = '#1a1a1a'
     bg_color='white'
+    if darktheme:
+        fg_color = 'white'
+        fg_color2 = '#D9D9D9'
+        bg_color='black'
     ax.patch.set_facecolor(bg_color)
     ax.tick_params(color=fg_color, labelcolor=fg_color)
     for spine in ax.spines.values():
@@ -369,14 +394,14 @@ def compareLines(
             ax.plot(
                 x_list,
                 y_list,
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 alpha=alpha,
                 # edgecolor="black",
                 linewidth=2,
             )
             ax.scatter(
                 x_list, y_list,
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 s=size,
                 alpha=alpha + ((1-alpha)/2),
             )
@@ -385,7 +410,7 @@ def compareLines(
             ax.plot(
                 x_list,
                 y_lists[i],
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 alpha=alpha,
                 # edgecolor="black",
                 linewidth=2,
@@ -393,7 +418,7 @@ def compareLines(
             )
             ax.scatter(
                 x_list, y_lists[i],
-                color=get_color(i),
+                color=get_color(i, darktheme),
                 alpha=alpha + ((1-alpha)/2),
                 s=size,
             )
@@ -437,13 +462,16 @@ def compareLines(
             plt.ylabel(f'Log {ylabel}', color=fg_color)
         else:
             plt.ylabel(ylabel, color=fg_color)
+    svgdirname = dirname + "-svg" 
     try:
         os.mkdir(dirname)
+        os.mkdir(svgdirname)
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
-    plt.savefig(f"{dirname}/{name}.svg", format='svg')
+    plt.savefig(f"{svgdirname}/{name}.svg", format='svg')
     plt.clf()
+    plt.close()
 
 def manyLines(
     x_list,
@@ -567,11 +595,13 @@ def manyLines(
             plt.ylabel(f'Log {ylabel}', color=fg_color)
         else:
             plt.ylabel(ylabel, color=fg_color)
+    svgdirname = dirname + "-svg" 
     try:
         os.mkdir(dirname)
+        os.mkdir(svgdirname)
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
-    plt.savefig(f"{dirname}/{name}.png", format='svg')
+    plt.savefig(f"{svgdirname}/{name}.svg", format='svg')
     plt.clf()
     plt.close()
