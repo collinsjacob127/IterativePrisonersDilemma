@@ -3,7 +3,7 @@
 
 <!-- ![](https://github.com/collinsjacob127/IterativePrisonersDilemma/blob/main/graphs/complete/test1/varying_prisoner_strat.gif) -->
 <p align="center">
-<img src="https://github.com/collinsjacob127/IterativePrisonersDilemma/blob/main/graphs/complete/test1/varying_prisoner_strat.gif" border="10"/>
+<img src="https://github.com/collinsjacob127/IterativePrisonersDilemma/blob/main/graphs/gnp/test1/varying_prisoner_strat.gif" border="10"/>
 </p>
 
 ## Authors
