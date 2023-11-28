@@ -81,20 +81,11 @@ def update_scores(
     score_tag='score',
     strategy_tag='strategy'):
     S = G.subgraph(n_bunch).copy()
-    """
-    for u in S.nodes():
-        for v in neighbors(S, u):
-            S.nodes[u][agent_tag].update_score(S.nodes[v][agent_tag])
-    
-    
-    if not kill:
-        return []
-    nodes_to_remove = [[u, G.nodes[u][agent_tag]] for u in G.nodes() if G.nodes[u][score_tag] > kill_score_cap]
-    for u in nodes_to_remove:
-        G.remove_node(u[0])
-        
-    return [u[1] for u in nodes_to_remove]
-    """
+    if kill:
+        nodes_to_remove = [[u, G.nodes[u][agent_tag]] for u in G.nodes() if G.nodes[u][score_tag] > kill_score_cap]
+        for u in nodes_to_remove:
+            G.remove_node(u[0])
+
     for u, v in G.edges():
         # Get u and v coop prob, have them play, whoever loses adjust their strategy
         G.nodes[u][agent_tag].update_score(G.nodes[v][agent_tag], takeover=takeover)
