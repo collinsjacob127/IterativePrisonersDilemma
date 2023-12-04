@@ -37,7 +37,7 @@ def add_rand_agents(
     set_node_attributes(G, attrs, tag)
     return G
 
-  
+ 
 # Agents are initialized with individual predefined scores and coop_probs
 # @return G: The input graph, with agents in G.node[u][tag]
 def add_agents(
@@ -92,6 +92,7 @@ def update_scores(
     
     update_score_attribute(G)
     return []
+
 
 def verify_agents(G):
     print([c for c in get_node_attributes(G)])
