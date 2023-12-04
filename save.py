@@ -314,8 +314,8 @@ def compareScatter(
             plt.ylabel(ylabel, color=fg_color)
     svgdirname = dirname + "-svg" 
     try:
-        os.mkdir(dirname)
-        os.mkdir(svgdirname)
+        makedirs(dirname, exist_ok=True)
+        makedirs(svgdirname, exist_ok=True)
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
@@ -464,8 +464,8 @@ def compareLines(
             plt.ylabel(ylabel, color=fg_color)
     svgdirname = dirname + "-svg" 
     try:
-        os.mkdir(dirname)
-        os.mkdir(svgdirname)
+        makedirs(dirname, exist_ok=True)
+        makedirs(svgdirname, exist_ok=True)
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
@@ -597,8 +597,8 @@ def manyLines(
             plt.ylabel(ylabel, color=fg_color)
     svgdirname = dirname + "-svg" 
     try:
-        os.mkdir(dirname)
-        os.mkdir(svgdirname)
+        makedirs(dirname, exist_ok=True)
+        makedirs(svgdirname, exist_ok=True)
     except FileExistsError:
         pass
     plt.savefig(f"{dirname}/{name}.png")
