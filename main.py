@@ -89,7 +89,7 @@ def test_proportions(G, n, dir_graph_name, graph_type):
         printProgressBar(
             iteration=0, 
             total=n_iter, 
-            suffix=f"{round(coop_prop*100,1)}% Starting Coop",
+            suffix=f"Starting Coop: {round(coop_prop*100,1)}%",
             length=25)
         for i in range(n_iter):
             coop_full_years.append([])
@@ -107,9 +107,9 @@ def test_proportions(G, n, dir_graph_name, graph_type):
             coop_years = mean_across_lists(coop_full_years)
             defect_years = mean_across_lists(defect_full_years)
             printProgressBar(
-                iteration=i+1, 
+                iteration=i, 
                 total=n_iter, 
-                suffix=f"{round(coop_prop*100,1)}% Starting Coop",
+                suffix=f"Starting Coop: {round(coop_prop*100,1)}%",
                 length=25)
         # print(f'coop_prob: {mean(coop_prop)}')
         # print(f'    defect_years: {mean(defect_years)}')
@@ -123,6 +123,11 @@ def test_proportions(G, n, dir_graph_name, graph_type):
         else:
             y_lists[1].append(0)
         y_lists[2].append((y_lists[0][len(y_lists[0])-1]+y_lists[1][len(y_lists[0])-1])/2)
+    printProgressBar(
+        iteration=n_iter, 
+        total=n_iter, 
+        suffix=f"Starting Coop: {round(coop_prop*100,1)}%",
+        length=25)
     compareLines(
         x_list=x_list,
         y_lists=y_lists,
@@ -169,23 +174,28 @@ def test_takeover(G, n, dir_graph_name, graph_type):
         printProgressBar(
             iteration=0, 
             total=n_iter, 
-            suffix=f"{round(coop_prop*100,1)}% Starting Coop",
+            suffix=f"Starting Coop: {round(coop_prop*100,1)}%",
             length=25)
         for j in range(n_iter):
             y_lists[i].append(np.mean([node.get_coop_prob() for node in [G.nodes[u]['agent'] for u in G.nodes()]]))
             update_scores(G)
             printProgressBar(
-                iteration=j+1, 
+                iteration=j, 
                 total=n_iter, 
-                suffix=f"{round(coop_prop*100,1)}% Starting Coop",
+                suffix=f"Starting Coop: {round(coop_prop*100,1)}%",
                 length=25)
+    printProgressBar(
+        iteration=n_iter, 
+        total=n_iter, 
+        suffix=f"Starting Coop: {round(coop_prop*100,1)}%",
+        length=25)
     compareLines(
         x_list=x_list,
         y_lists=y_lists,
         yrange=(-0.02, 1.02),
         xlabel="Time Step",
         ylabel="Mean Cooperation Probability",
-        y_labels=[f"{np.round(prop*100, 2)}% Cooperators" for prop in prop_list],
+        # y_labels=[f"{np.round(prop*100, 2)}% Cooperators" for prop in prop_list],
         dirname=f"figs/takeover/{dir_graph_name}",
         name=f'takeover',
         size=3,
@@ -199,7 +209,7 @@ def test_takeover(G, n, dir_graph_name, graph_type):
         yrange=(-0.02, 1.02),
         xlabel="Time Step",
         ylabel="Mean Cooperation Probability",
-        y_labels=[f"{np.round(prop*100, 2)}% Cooperators" for prop in prop_list],
+        # y_labels=[f"{np.round(prop*100, 2)}% Cooperators" for prop in prop_list],
         dirname=f"figs/takeover/{dir_graph_name}",
         name=f'dark_takeover',
         size=3,
@@ -210,20 +220,68 @@ def test_takeover(G, n, dir_graph_name, graph_type):
 
 if __name__=='__main__':
     n = 100
+    for k in [2,3,4,5]:
+        deg_seq = [k] * n
+        if sum(deg_seq) % 2 != 0:
+            deg_seq[0] += 1
+        G = nx.configuration_model(deg_seq)
+        dirname = f"config_{n}_{k}"
+        graph_type = f"Config Model, k={k}, n={n}"
+        test_proportions(G, n, dirname, graph_type)
+        test_takeover(G, n, dirname, graph_type)
+    n = 1000
+    for k in [2,3,4,5]:
+        deg_seq = [k] * n
+        if sum(deg_seq) % 2 != 0:
+            deg_seq[0] += 1
+        G = nx.configuration_model(deg_seq)
+        dirname = f"config_{n}_{k}"
+        graph_type = f"Config Model, k={k}, n={n}"
+        test_proportions(G, n, dirname, graph_type)
+        test_takeover(G, n, dirname, graph_type)
+
+    n = 100
     G = nx.gnp_random_graph(n, 0.05)
     dirname = "gnp_100_05"
     graph_type = r"Erdős–Rényi Random Graph, $G_{100,0.05}$"
     test_proportions(G, n, dirname, graph_type)
     test_takeover(G, n, dirname, graph_type)
+
     n = 1000
     G = nx.gnp_random_graph(n, 0.05)
-    dirname = "gnp_1000_05"
+    dirname = f"gnp_1000_05"
     graph_type = r"Erdős–Rényi Random Graph, $G_{1000,0.05}$"
     test_proportions(G, n, dirname, graph_type)
     test_takeover(G, n, dirname, graph_type)
 
     n = 100
-    m = 2
-    G = nx.barabasi_albert_graph(n, m)
+    for m in [2,3,4]:
+        dirname = f"barabasi_albert_{n}_{m}"
+        graph_type = r"Barabasi-Albert Random Graph, $G_{" + f'{n}, {m}' + r"}$"
+        G = nx.barabasi_albert_graph(n, m)
+        test_proportions(G, n, dirname, graph_type)
+        test_takeover(G, n, dirname, graph_type)
+
+    n = 500
+    for m in [2,3,4]:
+        dirname = f"barabasi_albert_{n}_{m}"
+        graph_type = r"Barabasi-Albert Random Graph, $G_{" + f'{n}, {m}' + r"}$"
+        G = nx.barabasi_albert_graph(n, m)
+        test_proportions(G, n, dirname, graph_type)
+        test_takeover(G, n, dirname, graph_type)
+    
+    n = 100
+    G = nx.complete_graph(n)
+    dirname = f"complete_{n}"
+    graph_type = r"Complete Graph, $K_{" + f'{n}' + r"}$"
     test_proportions(G, n, dirname, graph_type)
     test_takeover(G, n, dirname, graph_type)
+
+    n = 1000
+    G = nx.complete_graph(n)
+    dirname = f"complete_{n}"
+    graph_type = r"Complete Graph, $K_{" + f'{n}' + r"}$"
+    test_proportions(G, n, dirname, graph_type)
+    test_takeover(G, n, dirname, graph_type)
+    
+    

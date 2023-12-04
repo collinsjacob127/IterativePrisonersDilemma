@@ -273,7 +273,7 @@ def compareScatter(
                 alpha=alpha + ((1-alpha)/2),
                 s=size,
             )
-        ax.legend(loc=legend_pos)
+        ax.legend(loc=legend_pos, facecolor=bg_color, framealpha=0.5)
     # if len(y_lists) == 1 and label_vals:
     #     for i, x in enumerate(x_list):
     #         text_str = f'{np.round(y_lists[0][i], 2).__float__()}'
@@ -422,7 +422,7 @@ def compareLines(
                 alpha=alpha + ((1-alpha)/2),
                 s=size,
             )
-        ax.legend(loc=legend_pos)
+        ax.legend(loc=legend_pos, facecolor=bg_color, framealpha=0.5)
     # if len(y_lists) == 1 and label_vals:
     #     for i, x in enumerate(x_list):
     #         text_str = f'{np.round(y_lists[0][i], 2).__float__()}'
