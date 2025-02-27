@@ -17,6 +17,15 @@
 
 Simulate the [prisoner's dilemma](https://en.wikipedia.org/wiki/Prisoner's_dilemma) as a network and determine what factors influence prisoner's behavior over time as a community.
 
+Agents have an attribute `years imprisoned` which increases or decreases depending on the actions taken. Agents drop out after their years imprisoned reaches a certain threshold.
+
+For each iteration, every pair of connected agents interact and make their decisions based on their own intrinsic probabilities, which are adjusted after winning or losing.
+
+This simulation can be run on any simple graph, and figures are generated automatically.
+
+![](figs/takeover/gnp_100_05-svg/takeover.svg)
+![](figs/test_proportions/gnp_100_05-svg/proportions.svg)
+
 ## Instructions
 
 ### Clone Repo + Making Changes (Linux/WSL)
